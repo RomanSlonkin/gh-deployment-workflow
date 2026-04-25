@@ -1,0 +1,39 @@
+# Deploy of static page to GitHub Pages
+name: Deploy
+on:
+  # work on push to main branch
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+
+# Set permissions of GitHub Token to deploy pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # single deploy job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+

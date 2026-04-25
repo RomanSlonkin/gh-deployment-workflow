@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello, GitHub Actions!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #0d1117;
+      --color-surface: #161b22;
+      --color-border: #30363d;
+      --color-text: #e6edf3;
+      --color-text-muted: #8b949e;
+      --color-primary: #238636;
+      --color-primary-hover: #2ea043;
+      --color-accent: #58a6ff;
+      --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --space-2: 0.5rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+    body {
+      min-height: 100dvh;
+      font-family: var(--font-body);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-8) var(--space-4);
+    }
+
+    .container {
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* GitHub Actions logo icon */
+    .logo {
+      margin: 0 auto var(--space-6);
+      width: 72px;
+      height: 72px;
+    }
+
+    /* Workflow badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 9999px;
+      padding: 0.35rem var(--space-4);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-6);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-primary-hover);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    h1 {
+      font-family: var(--font-mono);
+      font-size: clamp(1.75rem, 2rem + 2vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: var(--space-4);
+      letter-spacing: -0.02em;
+    }
+
+    h1 span { color: var(--color-accent); }
+
+    p.subtitle {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      max-width: 48ch;
+      margin: 0 auto var(--space-8);
+      line-height: 1.6;
+    }
+
+    /* Terminal block */
+    .terminal {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      text-align: left;
+      margin-bottom: var(--space-8);
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      background: #0d1117;
+    }
+
+    .terminal-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+    }
+    .dot-red    { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green  { background: #28c840; }
+
+    .terminal-title {
+      margin-left: auto;
+      margin-right: auto;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+    }
+
+    .terminal-body {
+      padding: var(--space-4) var(--space-6);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .line-prompt { color: var(--color-primary-hover); }
+    .line-cmd    { color: var(--color-text); }
+    .line-output { color: var(--color-text-muted); }
+    .line-success { color: var(--color-primary-hover); }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-8);
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-6);
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      min-width: 110px;
+      position: relative;
+    }
+
+    .step-icon {
+      font-size: 1.4rem;
+    }
+
+    .step-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .step.active { border-color: var(--color-primary); color: var(--color-text); }
+    .step.done   { border-color: #30363d; opacity: 0.7; }
+
+    .step-arrow {
+      align-self: center;
+      color: var(--color-border);
+      font-size: 1.2rem;
+    }
+
+    footer {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+    }
+
+    footer a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- GitHub Actions SVG Logo -->
+    <svg class="logo" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="GitHub Actions">
+      <rect width="72" height="72" rx="16" fill="#161b22"/>
+      <!-- Outer circle -->
+      <circle cx="36" cy="36" r="22" stroke="#30363d" stroke-width="2"/>
+      <!-- Play arrow -->
+      <path d="M30 27l16 9-16 9V27z" fill="#2ea043"/>
+      <!-- Orbit dots -->
+      <circle cx="36" cy="14" r="3.5" fill="#58a6ff"/>
+      <circle cx="56" cy="47" r="3.5" fill="#58a6ff"/>
+      <circle cx="16" cy="47" r="3.5" fill="#58a6ff"/>
+    </svg>
+
+    <!-- Status badge -->
+    <div class="badge">
+      <span class="badge-dot"></span>
+      workflow · passing
+    </div>
+
+    <h1>Hello, <span>GitHub Actions!</span></h1>
+    <p class="subtitle">This page was deployed automatically by a CI/CD pipeline. Every push triggers a workflow run.</p>
+
+    <!-- Terminal -->
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="terminal-dot dot-red"></span>
+        <span class="terminal-dot dot-yellow"></span>
+        <span class="terminal-dot dot-green"></span>
+        <span class="terminal-title">deploy.yml — Run #42</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="line-prompt">▶</span> <span class="line-cmd">git push origin main</span></div>
+        <div class="line-output">Enumerating objects: 3, done.</div>
+        <div class="line-output">remote: Resolving deltas: 100% (1/1), done.</div>
+        <div><span class="line-prompt">▶</span> <span class="line-cmd">actions/checkout@v4</span></div>
+        <div class="line-output">Checking out repository...</div>
+        <div><span class="line-prompt">▶</span> <span class="line-cmd">Deploy to GitHub Pages</span></div>
+        <div class="line-success">✓ Deployment complete → https://roman-slonkin.github.io</div>
+      </div>
+    </div>
+
+    <!-- Pipeline steps -->
+    <div class="steps">
+      <div class="step done">
+        <span class="step-icon">✓</span>
+        <span class="step-label">checkout</span>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step done">
+        <span class="step-icon">✓</span>
+        <span class="step-label">lint</span>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step done">
+        <span class="step-icon">✓</span>
+        <span class="step-label">build</span>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step active">
+        <span class="step-icon">🚀</span>
+        <span class="step-label">deploy</span>
+      </div>
+    </div>
+
+    <footer>
+      Built with ❤️ and
+      <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer">GitHub Actions</a>
+    </footer>
+  </div>
+</body>
+</html>
